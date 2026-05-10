@@ -1,4 +1,4 @@
-package com.hms.user.ENUM;
+package com.hms.user.constant;
 
 public enum Roles {
     PATIENT, DOCTOR, ADMIN

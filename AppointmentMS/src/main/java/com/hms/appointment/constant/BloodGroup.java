@@ -1,4 +1,4 @@
-package com.hms.appointment.ENUM;
+package com.hms.appointment.constant;
 
 public enum BloodGroup {
     A_POSITIVE,

@@ -1,8 +1,10 @@
 package com.hms.appointment.service.serviceImp;
 
+import com.hms.appointment.dto.MedicineDTO;
 import com.hms.appointment.dto.PrescriptionDTO;
 import com.hms.appointment.entity.Prescription;
 import com.hms.appointment.exception.HMSException;
+import com.hms.appointment.repository.MedicineRepository;
 import com.hms.appointment.repository.PrescriptionRepository;
 import com.hms.appointment.service.MedicineService;
 import com.hms.appointment.service.PrescriptionService;
@@ -11,6 +13,8 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDate;
+import java.util.List;
+import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
@@ -20,6 +24,7 @@ public class PrescriptionServiceImp implements PrescriptionService {
     private final PrescriptionRepository prescriptionRepository;
 
     private final MedicineService medicineService;
+
 
     @Override
     public Long savePrescription(PrescriptionDTO request) {
@@ -59,5 +64,29 @@ public class PrescriptionServiceImp implements PrescriptionService {
                 .orElseThrow(() -> new HMSException("PRESCRIPTION_NOT_FOUND"));
         medicineService.deleteByPrescriptionId(prescription.getId());
         prescriptionRepository.delete(prescription);
+    }
+
+    @Override
+    public List<PrescriptionDTO> getAllByDoctorId(Long doctorId) {
+        List<Prescription> list =
+                prescriptionRepository.findAllByDoctorIdOrderByPrescriptionDateDesc(doctorId);
+
+        return list.stream().map(p -> {
+            PrescriptionDTO dto = p.toDTO();
+            dto.setMedicines(medicineService.getAllMedicinesByPrescriptionId(p.getId()));
+            return dto;
+        }).toList();
+    }
+
+    @Override
+    public List<PrescriptionDTO> getAllByPatientId(Long patientId) {
+        return prescriptionRepository.findAllByPatientId(patientId)
+                .stream()
+                .map(p -> {
+                    PrescriptionDTO dto = p.toDTO();
+                    dto.setMedicines(medicineService.getAllMedicinesByPrescriptionId(p.getId()));
+                    return dto;
+                })
+                .toList();
     }
 }

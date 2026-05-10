@@ -1,6 +1,6 @@
 package com.hms.user.jwt;
 
-import com.hms.user.ENUM.Roles;
+import com.hms.user.constant.Roles;
 import lombok.*;
 import org.springframework.security.core.*;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;

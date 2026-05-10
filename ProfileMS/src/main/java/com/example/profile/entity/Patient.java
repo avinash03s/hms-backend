@@ -1,6 +1,6 @@
 package com.example.profile.entity;
 
-import com.example.profile.ENUM.BloodGroup;
+import com.example.profile.constant.BloodGroup;
 import com.example.profile.dto.PatientDTO;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;

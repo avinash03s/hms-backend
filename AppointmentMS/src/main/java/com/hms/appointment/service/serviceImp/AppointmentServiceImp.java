@@ -1,6 +1,6 @@
 package com.hms.appointment.service.serviceImp;
 
-import com.hms.appointment.ENUM.Status;
+import com.hms.appointment.constant.Status;
 import com.hms.appointment.clients.ProfileClients;
 import com.hms.appointment.dto.AppointmentDTO;
 import com.hms.appointment.dto.AppointmentDetailsDTO;

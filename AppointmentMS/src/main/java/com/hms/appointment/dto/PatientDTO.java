@@ -1,6 +1,6 @@
 package com.hms.appointment.dto;
 
-import com.hms.appointment.ENUM.BloodGroup;
+import com.hms.appointment.constant.BloodGroup;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;

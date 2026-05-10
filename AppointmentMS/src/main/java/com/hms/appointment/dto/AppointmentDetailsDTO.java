@@ -1,6 +1,6 @@
 package com.hms.appointment.dto;
 
-import com.hms.appointment.ENUM.Status;
+import com.hms.appointment.constant.Status;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;

@@ -1,6 +1,6 @@
 package com.hms.user.service;
 
-import com.hms.user.ENUM.Roles;
+import com.hms.user.constant.Roles;
 import com.hms.user.dto.UserDTO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;

@@ -1,6 +1,6 @@
 package com.hms.appointment.entity;
 
-import com.hms.appointment.ENUM.Status;
+import com.hms.appointment.constant.Status;
 import com.hms.appointment.dto.AppointmentDTO;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;

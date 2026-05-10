@@ -1,6 +1,6 @@
 package com.hms.user.service.serviceImp;
 
-import com.hms.user.ENUM.Roles;
+import com.hms.user.constant.Roles;
 import com.hms.user.clients.ProfileClients;
 import com.hms.user.dto.UserDTO;
 import com.hms.user.entity.User;
@@ -11,7 +11,6 @@ import com.hms.user.service.UserService;
 import lombok.RequiredArgsConstructor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;

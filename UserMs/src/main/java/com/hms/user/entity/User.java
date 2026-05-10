@@ -1,6 +1,6 @@
 package com.hms.user.entity;
 
-import com.hms.user.ENUM.Roles;
+import com.hms.user.constant.Roles;
 import com.hms.user.dto.UserDTO;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.Email;

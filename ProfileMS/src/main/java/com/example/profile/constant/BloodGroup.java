@@ -1,4 +1,4 @@
-package com.example.profile.ENUM;
+package com.example.profile.constant;
 
 public enum BloodGroup {
     A_POSITIVE,

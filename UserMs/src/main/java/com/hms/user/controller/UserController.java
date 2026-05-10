@@ -1,10 +1,8 @@
 package com.hms.user.controller;
 
-import com.hms.user.ENUM.Roles;
 import com.hms.user.dto.LoginDTO;
 import com.hms.user.dto.ResponseDTO;
 import com.hms.user.dto.UserDTO;
-import com.hms.user.entity.User;
 import com.hms.user.exception.HMSException;
 import com.hms.user.jwt.JwtUtil;
 import com.hms.user.service.UserService;
