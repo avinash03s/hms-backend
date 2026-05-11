@@ -39,10 +39,8 @@ public class CorsConfig {
 
     @Bean
     public CorsWebFilter corsWebFilter() {
-
         CorsConfiguration config = new CorsConfiguration();
         config.setAllowCredentials(true);
-        // IMPORTANT
         config.addAllowedOriginPattern("http://localhost:*");
         config.setAllowedHeaders(Arrays.asList("*"));
         config.setAllowedMethods(Arrays.asList(
@@ -52,12 +50,8 @@ public class CorsConfig {
                 "DELETE",
                 "OPTIONS"
         ));
-
-        UrlBasedCorsConfigurationSource source =
-                new UrlBasedCorsConfigurationSource();
-
+        UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
         source.registerCorsConfiguration("/**", config);
-
         return new CorsWebFilter(source);
     }
 }

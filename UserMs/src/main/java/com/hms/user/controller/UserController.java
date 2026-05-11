@@ -40,7 +40,7 @@ public class UserController {
     private JwtUtil jwtUtil;
 
     @PostMapping("/register")
-    public ResponseEntity<ResponseDTO> registerUser(@RequestBody @Valid UserDTO userDTO) {
+    public ResponseEntity<ResponseDTO> registerUser(@RequestBody @Valid UserDTO userDTO) throws HMSException{
         log.info("Received request to register user with email: {}", userDTO.getEmail());
         userService.registerUser(userDTO);
         log.info("User registered successfully with email: {}", userDTO.getEmail());
@@ -48,7 +48,7 @@ public class UserController {
     }
 
     @PostMapping("/login")
-    public ResponseEntity<String> login(@RequestBody @Valid LoginDTO loginDTO) {
+    public ResponseEntity<String> login(@RequestBody @Valid LoginDTO loginDTO) throws HMSException{
         log.info("Login attempt for email: {}", loginDTO.getEmail());
         try {
             authenticationManager.authenticate(
