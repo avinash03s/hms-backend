@@ -15,15 +15,11 @@ public class GeminiServiceImp implements GeminiService {
 
     @Override
     public String askGemini(String prompt) {
-        String formattedPrompt = buildSystemPrompt(prompt);
+        String formattedPrompt = buildPrompt(prompt);
         for (int i = 0; i < 5; i++) {
             try {
                 GenerateContentResponse response =
-                        client.models.generateContent(
-                                "gemini-2.5-flash",
-                                formattedPrompt,
-                                null
-                        );
+                        client.models.generateContent("gemini-2.5-flash",formattedPrompt, null);
                 return cleanResponse(response.text());
 
             } catch (Exception e) {
@@ -39,7 +35,7 @@ public class GeminiServiceImp implements GeminiService {
         return "AI service is busy. Please try again after some time.";
     }
 
-    private String buildSystemPrompt(String userPrompt) {
+    private String buildPrompt(String userPrompt) {
         return """
             You are a medical AI assistant.
 
