@@ -1,5 +1,7 @@
 package com.hms.appointment.service.serviceImp;
 
+import com.hms.appointment.clients.ProfileClients;
+import com.hms.appointment.dto.DoctorDTO;
 import com.hms.appointment.dto.MedicineDTO;
 import com.hms.appointment.dto.PrescriptionDTO;
 import com.hms.appointment.entity.Prescription;
@@ -25,13 +27,20 @@ public class PrescriptionServiceImp implements PrescriptionService {
 
     private final MedicineService medicineService;
 
+    private final ProfileClients profileClients;
+
 
     @Override
     public Long savePrescription(PrescriptionDTO request) {
         // Set current date as prescription date
         request.setPrescriptionDate(LocalDate.now());
+        if (request.getDoctorName() == null || request.getDoctorName().isBlank()) {
+            DoctorDTO doctor = profileClients.getDoctorById(request.getDoctorId());
+            if (doctor != null) {
+                request.setDoctorName(doctor.getName());
+            }
+        }
         Long prescriptionId = prescriptionRepository.save(request.toEntity()).getId();
-
         // Set prescription id inside every medicine
         request.getMedicines().forEach(medicine -> {
             medicine.setPrescriptionId(prescriptionId);
@@ -85,6 +94,12 @@ public class PrescriptionServiceImp implements PrescriptionService {
                 .map(p -> {
                     PrescriptionDTO dto = p.toDTO();
                     dto.setMedicines(medicineService.getAllMedicinesByPrescriptionId(p.getId()));
+
+                    if (dto.getDoctorName() == null || dto.getDoctorName().isBlank()) {
+                        DoctorDTO doctor = profileClients.getDoctorById(dto.getDoctorId());
+                        if (doctor != null) dto.setDoctorName(doctor.getName());
+                    }
+
                     return dto;
                 })
                 .toList();

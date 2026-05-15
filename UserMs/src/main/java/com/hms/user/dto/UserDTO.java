@@ -1,6 +1,7 @@
 package com.hms.user.dto;
 
 import com.hms.user.constant.Roles;
+import com.hms.user.entity.ForgotPassword;
 import com.hms.user.entity.User;
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
@@ -29,7 +30,8 @@ public class UserDTO {
     private Roles role;
     private Long profileId;
 
+
     public User toEntity() {
-        return new User(this.id, this.name, this.email, this.password, this.role, this.profileId);
+        return new User(this.id, this.name, this.email, this.password, this.role, this.profileId, null);
     }
 }

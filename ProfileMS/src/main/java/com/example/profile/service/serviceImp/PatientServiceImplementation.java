@@ -44,7 +44,7 @@ public class PatientServiceImplementation implements PatientService {
 
     @Override
     public List<PatientDTO> getAllPatient() {
-        return patientRepository.findAll()
+        return patientRepository.findByActiveTrue()
                 .stream()
                 .map(p -> new PatientDTO(
                         p.getId(),
@@ -57,7 +57,8 @@ public class PatientServiceImplementation implements PatientService {
                         p.getAadharId(),
                         p.getBloodGroup(),
                         p.getAllergies(),
-                        p.getChronicDisease()
+                        p.getChronicDisease(),
+                        true
                 )).toList();
     }
 
@@ -65,6 +66,7 @@ public class PatientServiceImplementation implements PatientService {
     public void deletePatientById(Long patientId) {
         Patient patient = patientRepository.findById(patientId)
                 .orElseThrow(() -> new HMSException("PATIENT_NOT_FOUND"));
-        patientRepository.delete(patient);
+        patient.setActive(false);
+        patientRepository.save(patient);
     }
 }

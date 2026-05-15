@@ -13,8 +13,11 @@ import com.hms.appointment.service.ApiService;
 import com.hms.appointment.service.AppointmentService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
+import java.util.Map;
+import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
@@ -103,27 +106,91 @@ public class AppointmentServiceImp implements AppointmentService {
         );
     }
 
+    @Transactional(readOnly = true)
     @Override
     public List<AppointmentDetailsDTO> getAllAppointmentByPatientId(Long patientId) {
         return appointmentRepository.findAllByPatientId(patientId).stream()
                 .map(appointment -> {
                     DoctorDTO doctorDTO =
-                            profileClients.getDoctorById(appointment.getDoctorId());
+                            profileClients.getDoctorById(appointment.getDoctorId());//n+1 problem
                     appointment.setDoctorName(doctorDTO.getName());
                     return appointment;
                 }).toList();
     }
 
+    @Transactional(readOnly = true)
     @Override
     public List<AppointmentDetailsDTO> getAllAppointmentByDoctorId(Long doctorId) {
         return appointmentRepository.findAllByDoctorId(doctorId).stream()
-                .map(appointment -> {
-                    PatientDTO patientDTO =
-                            profileClients.getPatientById(appointment.getPatientId());
-                    appointment.setPatientName(patientDTO.getName());
-                    appointment.setPatientEmail(patientDTO.getName());
-                    appointment.setPatientPhone(patientDTO.getPhoneNo());
-                    return appointment;
+                .map(a->{
+                     PatientDTO patientById = profileClients.getPatientById(a.getPatientId());
+//                     a.setPatientName(patientById.getName());
+                    if (patientById != null){
+                        a.setPatientName(patientById.getName());
+                    }else {
+                        a.setPatientName("Inactive Patient");
+                    }
+                     return a;
                 }).toList();
+    }
+
+//    @Transactional(readOnly = true)
+//    @Override
+//    public List<AppointmentDetailsDTO> getAllAppointmentByDoctorId(Long doctorId) {
+//        List<Appointment> appointments =
+//                appointmentRepository.findAllByDoctorId(doctorId);
+//        if (appointments.isEmpty()) {
+//            return List.of();
+//        }
+//        List<Long> patientIds = appointments.stream()
+//                .map(Appointment::getPatientId)
+//                .distinct()
+//                .toList();
+//        if (patientIds.isEmpty()) {
+//            return List.of();
+//        }
+//        List<PatientDTO> patients = profileClients.getPatientsByIds(patientIds);
+//        if (patients == null) {
+//            patients = List.of();
+//        }
+//        Map<Long, PatientDTO> patientMap = patients.stream()
+//                .collect(Collectors.toMap(PatientDTO::getId, p -> p));
+//        return appointments.stream()
+//                .map(app -> {
+//                    PatientDTO patient = patientMap.get(app.getPatientId());
+//                    if (patient == null) {
+//                        throw new HMSException("PATIENT_NOT_FOUND");
+//                    }
+//                    return new AppointmentDetailsDTO(
+//                            app.getId(),
+//                            app.getPatientId(),
+//                            patient.getName(),
+//                            patient.getEmail(),
+//                            patient.getPhoneNo(),
+//                            app.getDoctorId(),
+//                            null,
+//                            app.getAppointmentTime(),
+//                            app.getStatus(),
+//                            app.getReason(),
+//                            app.getNotes()
+//                    );
+//                })
+//                .toList();
+//    }
+
+    @Override
+    public List<AppointmentDTO> getAllAppointments() {
+        return appointmentRepository.findAll()
+                .stream()
+                .map(Appointment::toDto)
+                .toList();
+    }
+
+    @Override
+    public List<AppointmentDTO> getAllAppointmentDetails() {
+        List<Appointment> appointments = appointmentRepository.findAll();
+        return appointments.stream()
+                .map(Appointment::toDto)
+                .toList();
     }
 }

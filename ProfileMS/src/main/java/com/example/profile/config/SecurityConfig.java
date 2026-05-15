@@ -33,6 +33,4 @@ public class SecurityConfig {
         httpSecurity.csrf((csrf) -> csrf.disable());
         return httpSecurity.build();
     }
-
-
 }

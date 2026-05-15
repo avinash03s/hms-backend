@@ -24,10 +24,11 @@ public class DoctorDTO {
     private String specialization;
     private String department;
     private Integer totalExperience;
+    private Boolean active;
 
     public Doctor toEntity() {
         return new Doctor(this.id, this.name, this.email, this.dob,this.profilePictureId, this.phoneNo, this.address
-                , this.licenseNumber, this.specialization, this.department, this.totalExperience);
+                , this.licenseNumber, this.specialization, this.department, this.totalExperience,true);
     }
     //Converts Entity (Doctor) into DTO (DoctorDTO)
     //Fetch data from DB (Entity)

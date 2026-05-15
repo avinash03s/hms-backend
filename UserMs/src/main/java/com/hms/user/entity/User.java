@@ -11,7 +11,8 @@ import lombok.NoArgsConstructor;
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
-@Entity(name = "user_detail")
+@Entity()
+@Table(name = "user_detail")
 public class User {
 
     @Id
@@ -29,6 +30,9 @@ public class User {
     @Enumerated(EnumType.STRING)
     private Roles role;
     private Long profileId;
+
+    @OneToOne(mappedBy = "user")
+    private ForgotPassword forgotPassword;
 
     public UserDTO toDTO() {
         return new UserDTO(this.id, this.name, this.email, this.password, this.role, this.profileId);

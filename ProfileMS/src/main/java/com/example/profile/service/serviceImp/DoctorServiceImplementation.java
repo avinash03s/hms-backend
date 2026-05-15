@@ -42,12 +42,14 @@ public class DoctorServiceImplementation implements DoctorService {
 
     @Override
     public boolean doctorExists(Long id) {
-        return doctorRepository.existsById(id);
+        return doctorRepository.findById(id)
+                .map(Doctor::getActive)
+                .orElse(false);
     }
 
     @Override
     public List<DoctorDTO> getAllDoctors() {
-        return doctorRepository.findAll()
+        return doctorRepository.findByActiveTrue()
                 .stream()
                 .map(doc -> new DoctorDTO(
                         doc.getId(),
@@ -60,7 +62,8 @@ public class DoctorServiceImplementation implements DoctorService {
                         doc.getLicenseNumber(),
                         doc.getSpecialization(),
                         doc.getDepartment(),
-                        doc.getTotalExperience()
+                        doc.getTotalExperience(),
+                        true
                 ))
                 .toList();
     }
@@ -74,7 +77,8 @@ public class DoctorServiceImplementation implements DoctorService {
     public void deleteDoctorById(Long doctorId) {
         Doctor doctor = doctorRepository.findById(doctorId)
                 .orElseThrow(() -> new HMSException("DOCTOR_NOT_FOUND"));
-        doctorRepository.delete(doctor);
+        doctor.setActive(false);
+        doctorRepository.save(doctor);
     }
 
     @Override

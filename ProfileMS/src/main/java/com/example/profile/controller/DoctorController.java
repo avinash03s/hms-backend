@@ -3,6 +3,7 @@ package com.example.profile.controller;
 import com.example.profile.dto.DoctorDTO;
 import com.example.profile.dto.DoctorDropDown;
 import com.example.profile.service.DoctorService;
+import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -12,10 +13,10 @@ import java.util.List;
 
 @RestController
 @RequestMapping("/profile/doctor")
+@RequiredArgsConstructor
 public class DoctorController {
 
-    @Autowired
-    private DoctorService doctorService;
+    private final DoctorService doctorService;
 
     @PostMapping("/add")
     public ResponseEntity<Long> addDoctor(@RequestBody DoctorDTO doctorDTO) {
