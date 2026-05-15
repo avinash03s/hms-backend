@@ -34,9 +34,10 @@ public class Patient {
     private BloodGroup bloodGroup;
     private String allergies;
     private String chronicDisease;
+    private Boolean active = true;
 
     public PatientDTO toDTO(){
         return new PatientDTO(this.id, this.name, this.email,this.dob,this.profilePictureId
-                ,this.phoneNo,this.address,this.aadharId,this.bloodGroup,this.allergies,this.chronicDisease);
+                ,this.phoneNo,this.address,this.aadharId,this.bloodGroup,this.allergies,this.chronicDisease,true);
     }
 }

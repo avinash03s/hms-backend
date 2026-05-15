@@ -35,6 +35,7 @@ public class Doctor {
     private String specialization;
     private String department;
     private Integer totalExperience;
+    private Boolean active = true;
 
     public DoctorDTO toDTO() {
         return new DoctorDTO(
@@ -48,7 +49,8 @@ public class Doctor {
                 this.licenseNumber,
                 this.specialization,
                 this.department,
-                this.totalExperience
+                this.totalExperience,
+                true
         );
     }
     //Converts a DTO (DoctorDTO) into a Database Entity (Doctor)

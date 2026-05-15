@@ -25,6 +25,10 @@ public interface ProfileClients {
     @GetMapping("/profile/doctor/get/{id}")
     DoctorDTO getDoctorById(@PathVariable("id") Long id);
 
-    @GetMapping("/profile/doctor/getDoctorsById")
+        @GetMapping("/profile/doctor/getDoctorsById")
     List<DoctorName> getDoctorsById(@RequestParam List<Long> ids);
+
+// Missing: add this for getAllAppointmentByDoctorId batch fix
+    @GetMapping("/profile/patient/getPatientsByIds")
+    List<PatientDTO> getPatientsByIds(@RequestParam List<Long> ids);
 }

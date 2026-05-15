@@ -25,7 +25,7 @@ public class AppointmentRecord {
     private Long doctorId;
 
     @OneToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "appointment_id")
+    @JoinColumn(name = "appointment_id", unique = true, nullable = false)
     private Appointment appointment;
     private String symptoms;
     private String diagnosis;

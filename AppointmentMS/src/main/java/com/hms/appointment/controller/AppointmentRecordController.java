@@ -53,8 +53,7 @@ public class AppointmentRecordController {
     }
 
     @GetMapping("/getRecordsByPatientId/{patientId}")
-    public ResponseEntity<List<RecordDetailsDTO>>
-    getRecordsByPatientId(@PathVariable Long patientId) {
+    public ResponseEntity<List<RecordDetailsDTO>> getRecordsByPatientId(@PathVariable Long patientId) {
         return new ResponseEntity<>(appointmentRecordService.getAppointmentRecordByPatientId(patientId), HttpStatus.OK);
     }
 }

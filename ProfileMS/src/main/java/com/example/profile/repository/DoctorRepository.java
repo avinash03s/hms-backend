@@ -21,4 +21,6 @@ public interface DoctorRepository extends JpaRepository<Doctor, Long> {
 
     @Query("SELECT d.id AS id, d.name AS name FROM doctor_details d WHERE d.id in ?1")
     List<DoctorDropDown> findAllDoctorDropdownsByIds(List<Long> ids);
+
+    List<Doctor> findByActiveTrue();
 }

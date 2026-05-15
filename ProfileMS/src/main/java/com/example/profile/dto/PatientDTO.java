@@ -23,10 +23,11 @@ public class PatientDTO {
     private BloodGroup bloodGroup;
     private String allergies;
     private String chronicDisease;
+    private Boolean active;
 
     public Patient toEntity(){
         return new Patient(this.id, this.name, this.email,this.dob,this.profilePictureId
-        ,this.phoneNo,this.address,this.aadharId,this.bloodGroup,this.allergies,this.chronicDisease);
+        ,this.phoneNo,this.address,this.aadharId,this.bloodGroup,this.allergies,this.chronicDisease,true);
     }
 
 }

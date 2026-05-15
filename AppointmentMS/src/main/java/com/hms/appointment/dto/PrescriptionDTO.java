@@ -20,12 +20,13 @@ public class PrescriptionDTO {
     private Long id;
     private Long patientId;
     private Long doctorId;
+    private String doctorName;
     private Long appointmentId;
     private LocalDate prescriptionDate;
     private String prescriptionNotes;
     private List<MedicineDTO> medicines;
 
     public Prescription toEntity() {
-        return new Prescription(id, patientId, doctorId, new Appointment(appointmentId), prescriptionDate, prescriptionNotes);
+        return new Prescription(id, patientId, doctorId, doctorName, new Appointment(appointmentId), prescriptionDate, prescriptionNotes);
     }
 }

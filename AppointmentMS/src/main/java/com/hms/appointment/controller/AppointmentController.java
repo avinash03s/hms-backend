@@ -3,6 +3,7 @@ package com.hms.appointment.controller;
 import com.hms.appointment.dto.AppointmentDTO;
 import com.hms.appointment.dto.AppointmentDetailsDTO;
 import com.hms.appointment.service.AppointmentService;
+import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -14,10 +15,10 @@ import java.util.List;
 @RestController
 @RequestMapping("/appointment")
 @Validated
+@RequiredArgsConstructor
 public class AppointmentController {
 
-    @Autowired
-    private AppointmentService appointmentService;
+    private final AppointmentService appointmentService;
 
     @PostMapping("/schedule")
     public ResponseEntity<Long> scheduleAppointment(@RequestBody AppointmentDTO dto) {
@@ -49,5 +50,15 @@ public class AppointmentController {
     @GetMapping("/getAllByDoctor/{doctorId}")
     public ResponseEntity<List<AppointmentDetailsDTO>> getAllAppointmentByDoctorId(@PathVariable("doctorId") Long doctorId) {
         return new ResponseEntity<>(appointmentService.getAllAppointmentByDoctorId(doctorId), HttpStatus.OK);
+    }
+
+    @GetMapping("/all")
+    public ResponseEntity<List<AppointmentDTO>> getAllAppointments() {
+        return new ResponseEntity<>(appointmentService.getAllAppointments(), HttpStatus.OK);
+    }
+
+    @GetMapping("/all/details")
+    public ResponseEntity<List<AppointmentDTO>> getAllAppointmentDetails() {
+        return new ResponseEntity<>(appointmentService.getAllAppointmentDetails(), HttpStatus.OK);
     }
 }

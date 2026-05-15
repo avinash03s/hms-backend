@@ -44,6 +44,9 @@ public class AppointmentRecordServiceImp implements AppointmentRecordService {
         if (request.getPrescription() != null) {
             /// Set appointment id inside prescription
             request.getPrescription().setAppointmentId(request.getAppointmentId());
+            request.getPrescription().setDoctorId(request.getDoctorId());
+
+            request.getPrescription().setPatientId(request.getPatientId());
             /// Save prescription
             prescriptionService.savePrescription(request.getPrescription());
         }
