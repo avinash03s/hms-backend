@@ -1,12 +1,15 @@
 package com.hms.appointment.service.serviceImp;
 
 import com.hms.appointment.clients.ProfileClients;
+import com.hms.appointment.constant.Status;
 import com.hms.appointment.dto.AppointmentRecordDTO;
 import com.hms.appointment.dto.DoctorName;
 import com.hms.appointment.dto.RecordDetailsDTO;
+import com.hms.appointment.entity.Appointment;
 import com.hms.appointment.entity.AppointmentRecord;
 import com.hms.appointment.exception.HMSException;
 import com.hms.appointment.repository.AppointmentRecordRepository;
+import com.hms.appointment.repository.AppointmentRepository;
 import com.hms.appointment.service.AppointmentRecordService;
 import com.hms.appointment.service.PrescriptionService;
 import com.hms.appointment.utility.StringListConverter;
@@ -31,6 +34,8 @@ public class AppointmentRecordServiceImp implements AppointmentRecordService {
 
     private final ProfileClients profileClients;
 
+    private final AppointmentRepository appointmentRepository;
+
     ///  Create new appointment record
     @Override
     public Long createAppointmentRecord(AppointmentRecordDTO request) {
@@ -50,6 +55,15 @@ public class AppointmentRecordServiceImp implements AppointmentRecordService {
             /// Save prescription
             prescriptionService.savePrescription(request.getPrescription());
         }
+
+        // UPDATE APPOINTMENT STATUS
+        Appointment appointment = appointmentRepository
+                .findById(request.getAppointmentId())
+                .orElseThrow(() ->  
+                        new HMSException("APPOINTMENT_NOT_FOUND"));
+        appointment.setStatus(Status.COMPLETED);
+        appointmentRepository.save(appointment);
+
         return id;
     }
 
