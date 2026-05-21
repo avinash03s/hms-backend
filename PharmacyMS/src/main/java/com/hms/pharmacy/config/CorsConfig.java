@@ -1,4 +1,4 @@
-package com.hms.user.config;
+package com.hms.pharmacy.config;
 
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -10,21 +10,12 @@ public class CorsConfig {
 
     @Bean
     public WebMvcConfigurer corsConfigurer() {
-
         return new WebMvcConfigurer() {
-
             @Override
             public void addCorsMappings(CorsRegistry registry) {
-
                 registry.addMapping("/**")
-                        .allowedOriginPatterns("http://localhost:*")
-                        .allowedMethods(
-                                 "GET",
-                                "POST",
-                                "PUT",
-                                "DELETE",
-                                "OPTIONS"
-                        )
+                        .allowedOrigins("http://localhost:5173")
+                        .allowedMethods("GET", "POST", "PUT", "DELETE")
                         .allowedHeaders("*")
                         .allowCredentials(true);
             }

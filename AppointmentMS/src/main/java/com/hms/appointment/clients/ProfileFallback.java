@@ -2,6 +2,7 @@
 //
 //import com.hms.appointment.dto.DoctorDTO;
 //import com.hms.appointment.dto.DoctorName;
+//import com.hms.appointment.dto.HospitalDTO;
 //import com.hms.appointment.dto.PatientDTO;
 //import org.springframework.stereotype.Component;
 //
@@ -36,9 +37,19 @@
 //    }
 //
 //    @Override
-//    public List<PatientDTO> getPatientsByIds(List<Long> ids) {
-//        return List.of();
+//    public Boolean checkDoctorHospitalMapping(Long doctorId, Long hospitalId) {
+//        return null;
 //    }
+//
+//    @Override
+//    public HospitalDTO getHospitalById(Long id) {
+//        return null;
+//    }
+//
+////    @Override
+////    public List<PatientDTO> getPatientsByIds(List<Long> ids) {
+////        return List.of();
+////    }
 //
 ////    @Override
 ////    public List<DoctorName> getDoctorsById(List<Long> ids) {

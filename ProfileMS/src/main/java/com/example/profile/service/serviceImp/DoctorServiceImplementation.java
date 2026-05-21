@@ -9,7 +9,6 @@ import com.example.profile.service.DoctorService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import javax.print.Doc;
 import java.util.List;
 
 @Service
