@@ -12,6 +12,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.AuthenticationException;
@@ -65,5 +66,12 @@ public class UserController {
         String jwt = jwtUtil.generateToken(userDetails);
         log.info("JWT token generated for email: {}", loginDTO.getEmail());
         return new ResponseEntity<>(jwt, HttpStatus.OK);
+    }
+
+    @PostMapping("/create-doctor")
+    @PreAuthorize("hasRole('ADMIN')")
+    public ResponseEntity<ResponseDTO> createDoctor(@RequestBody @Valid UserDTO userDTO) {
+        userService.createDoctor(userDTO);
+        return new ResponseEntity<>(new ResponseDTO("Doctor Created Successfully"), HttpStatus.CREATED);
     }
 }

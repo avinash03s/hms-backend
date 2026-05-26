@@ -12,6 +12,7 @@ import com.hms.appointment.repository.AppointmentRecordRepository;
 import com.hms.appointment.repository.AppointmentRepository;
 import com.hms.appointment.service.AppointmentRecordService;
 import com.hms.appointment.service.PrescriptionService;
+import com.hms.appointment.service.S3ArchiveService;
 import com.hms.appointment.utility.StringListConverter;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -35,6 +36,8 @@ public class AppointmentRecordServiceImp implements AppointmentRecordService {
     private final ProfileClients profileClients;
 
     private final AppointmentRepository appointmentRepository;
+
+    private final S3ArchiveService s3ArchiveService;
 
     ///  Create new appointment record
     @Override

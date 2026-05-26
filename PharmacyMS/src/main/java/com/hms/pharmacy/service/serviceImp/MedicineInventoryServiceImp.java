@@ -26,11 +26,16 @@ public class MedicineInventoryServiceImp implements MedicineInventoryService {
 
 
     @Override
-    public List<MedicineInventoryDTO> getAllMedicines(){
-        List<MedicineInventory> all = medicineInventoryRepository.findAll();
-        return all.stream()
-                .map(MedicineInventory::toDto)
-                .toList() ;
+    public List<MedicineInventoryDTO> getAllMedicines() {
+        return medicineInventoryRepository.findAll().stream()
+                .map(inv -> {
+                    if (inv.getExpireDate() != null &&
+                            inv.getExpireDate().isBefore(LocalDate.now())) {
+                        inv.setStockStatus(StockStatus.EXPIRED);
+                    }
+                    return inv.toDto();
+                })
+                .toList();
     }
 
     @Override
@@ -52,8 +57,21 @@ public class MedicineInventoryServiceImp implements MedicineInventoryService {
     public MedicineInventoryDTO updateMedicine(MedicineInventoryDTO medicine) {
         MedicineInventory exitingInventory = medicineInventoryRepository.findById(medicine.getId())
                 .orElseThrow(() -> new HMSException("INVENTORY_NOT_FOUND"));
-        exitingInventory.setBatchNo(medicine.getBatchNo());
 
+        exitingInventory.setBatchNo(medicine.getBatchNo());
+        exitingInventory.setQuantity(medicine.getQuantity());
+        exitingInventory.setInitialQuantity(medicine.getQuantity());
+        exitingInventory.setExpireDate(medicine.getExpireDate());
+
+        //expiry check on update
+        if (medicine.getExpireDate() != null &&
+                medicine.getExpireDate().isBefore(LocalDate.now())) {
+            exitingInventory.setStockStatus(StockStatus.EXPIRED);
+        } else {
+            exitingInventory.setStockStatus(StockStatus.ACTIVE);
+        }
+
+        // quantity update
         if (exitingInventory.getQuantity() < medicine.getQuantity()) {
             medicineService.addStock(medicine.getMedicineId(),
                     medicine.getQuantity() - exitingInventory.getQuantity());
@@ -61,10 +79,6 @@ public class MedicineInventoryServiceImp implements MedicineInventoryService {
             medicineService.removeStock(medicine.getMedicineId(),
                     exitingInventory.getQuantity() - medicine.getQuantity());
         }
-
-        exitingInventory.setQuantity(medicine.getQuantity());
-        exitingInventory.setInitialQuantity(medicine.getQuantity());
-        exitingInventory.setExpireDate(medicine.getExpireDate());
         return medicineInventoryRepository.save(exitingInventory).toDto();
     }
 

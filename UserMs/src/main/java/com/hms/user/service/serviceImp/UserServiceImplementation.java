@@ -33,26 +33,40 @@ public class UserServiceImplementation implements UserService {
 
     private final ProfileClients profileClients;
 
+//    @Override
+//    public void registerUser(UserDTO userDTO) {
+//        log.info("Registering user with email: {}", userDTO.getEmail());
+//        Optional<User> byEmail = repository.findByEmail(userDTO.getEmail());
+//        if (byEmail.isPresent()) {
+//            log.warn("User already exists with email: {}", userDTO.getEmail());
+//            throw new HMSException("USER_ALREADY_EXITS");
+//        }
+//        log.debug("Encoding password for email: {}", userDTO.getEmail());
+//        userDTO.setPassword(passwordEncoder.encode(userDTO.getPassword()));
+//        log.info("Calling Profile Service to create profile for email: {}", userDTO.getEmail());
+//        Long profileId = null;
+//        if (userDTO.getRole().equals(Roles.DOCTOR)) {
+//            profileId = profileClients.addDoctor(userDTO);
+//        } else if (userDTO.getRole().equals(Roles.PATIENT)) {
+//            profileId = profileClients.addPatient(userDTO);
+//        }
+//        userDTO.setProfileId(profileId);
+//        repository.save(userDTO.toEntity());
+//        log.info("User saved successfully in database with email: {}", userDTO.getEmail());
+//    }
+
+    /// role based
     @Override
     public void registerUser(UserDTO userDTO) {
-        log.info("Registering user with email: {}", userDTO.getEmail());
         Optional<User> byEmail = repository.findByEmail(userDTO.getEmail());
         if (byEmail.isPresent()) {
-            log.warn("User already exists with email: {}", userDTO.getEmail());
             throw new HMSException("USER_ALREADY_EXITS");
         }
-        log.debug("Encoding password for email: {}", userDTO.getEmail());
+        userDTO.setRole(Roles.PATIENT);
         userDTO.setPassword(passwordEncoder.encode(userDTO.getPassword()));
-        log.info("Calling Profile Service to create profile for email: {}", userDTO.getEmail());
-        Long profileId = null;
-        if (userDTO.getRole().equals(Roles.DOCTOR)) {
-            profileId = profileClients.addDoctor(userDTO);
-        } else if (userDTO.getRole().equals(Roles.PATIENT)) {
-            profileId = profileClients.addPatient(userDTO);
-        }
+        Long profileId = profileClients.addPatient(userDTO);
         userDTO.setProfileId(profileId);
         repository.save(userDTO.toEntity());
-        log.info("User saved successfully in database with email: {}", userDTO.getEmail());
     }
 
     @Override
@@ -97,5 +111,27 @@ public class UserServiceImplementation implements UserService {
                     return new HMSException("USER_NOT_FOUND");
                 })
                 .toDTO();
+    }
+
+    @Override
+    public void createDoctor(UserDTO userDTO) {
+        Optional<User> byEmail = repository.findByEmail(userDTO.getEmail());
+        if (byEmail.isPresent()) {
+            throw new HMSException("USER_ALREADY_EXITS");
+        }
+        //Set Role and password
+        userDTO.setRole(Roles.DOCTOR);
+        userDTO.setPassword(passwordEncoder.encode(userDTO.getPassword()));
+
+        //First User save
+        User savedUser = repository.save(userDTO.toEntity());
+        userDTO.setId(savedUser.getId());
+
+        //Send to ProfileMS
+        Long profileId = profileClients.addDoctor(userDTO);
+
+        //Update ProfileId
+        savedUser.setProfileId(profileId);
+        repository.save(savedUser);
     }
 }

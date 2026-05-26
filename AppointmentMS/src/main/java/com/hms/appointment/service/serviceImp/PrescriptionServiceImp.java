@@ -10,6 +10,7 @@ import com.hms.appointment.repository.MedicineRepository;
 import com.hms.appointment.repository.PrescriptionRepository;
 import com.hms.appointment.service.MedicineService;
 import com.hms.appointment.service.PrescriptionService;
+import com.hms.appointment.service.S3ArchiveService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -28,6 +29,8 @@ public class PrescriptionServiceImp implements PrescriptionService {
     private final MedicineService medicineService;
 
     private final ProfileClients profileClients;
+
+    private final S3ArchiveService s3ArchiveService;
 
 
     @Override
@@ -81,8 +84,19 @@ public class PrescriptionServiceImp implements PrescriptionService {
                 prescriptionRepository.findAllByDoctorIdOrderByPrescriptionDateDesc(doctorId);
 
         return list.stream().map(p -> {
-            PrescriptionDTO dto = p.toDTO();
-            dto.setMedicines(medicineService.getAllMedicinesByPrescriptionId(p.getId()));
+            PrescriptionDTO dto;
+
+            if (p.isArchived() && p.getS3Key() != null) {
+                dto = s3ArchiveService.fetchFromS3(p.getS3Key());
+                dto.setArchived(true);
+                dto.setS3Key(p.getS3Key());
+            } else {
+                dto = p.toDTO();
+                dto.setMedicines(
+                        medicineService.getAllMedicinesByPrescriptionId(p.getId())
+                );
+            }
+
             return dto;
         }).toList();
     }
@@ -92,8 +106,18 @@ public class PrescriptionServiceImp implements PrescriptionService {
         return prescriptionRepository.findAllByPatientId(patientId)
                 .stream()
                 .map(p -> {
-                    PrescriptionDTO dto = p.toDTO();
-                    dto.setMedicines(medicineService.getAllMedicinesByPrescriptionId(p.getId()));
+                    PrescriptionDTO dto;
+
+                    if (p.isArchived() && p.getS3Key() != null) {
+                        dto = s3ArchiveService.fetchFromS3(p.getS3Key());
+                        dto.setArchived(true);
+                        dto.setS3Key(p.getS3Key());
+                    } else {
+                        dto = p.toDTO();
+                        dto.setMedicines(
+                                medicineService.getAllMedicinesByPrescriptionId(p.getId())
+                        );
+                    }
 
                     if (dto.getDoctorName() == null || dto.getDoctorName().isBlank()) {
                         DoctorDTO doctor = profileClients.getDoctorById(dto.getDoctorId());

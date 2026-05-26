@@ -6,6 +6,7 @@ import com.example.profile.service.DoctorService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -18,6 +19,7 @@ public class DoctorController {
     private final DoctorService doctorService;
 
     @PostMapping("/add")
+    @PreAuthorize("hasRole('ADMIN')")
     public ResponseEntity<Long> addDoctor(@RequestBody DoctorDTO doctorDTO) {
         return new ResponseEntity<>(doctorService.addDoctor(doctorDTO), HttpStatus.CREATED);
     }
@@ -28,6 +30,7 @@ public class DoctorController {
     }
 
     @PutMapping("/update")
+//    @PreAuthorize("hasRole('ADMIN')")
     public ResponseEntity<DoctorDTO> updateDoctor(@RequestBody DoctorDTO doctorDTO) {
         return new ResponseEntity<>(doctorService.updateDoctor(doctorDTO), HttpStatus.OK);
     }
@@ -48,6 +51,7 @@ public class DoctorController {
     }
 
     @DeleteMapping("/delete/{doctorId}")
+    @PreAuthorize("hasRole('ADMIN')")
     public ResponseEntity<String> deleteDoctorById(@PathVariable("doctorId") Long doctorId) {
         doctorService.deleteDoctorById(doctorId);
         return new ResponseEntity<>("Doctor Delete Successfully", HttpStatus.OK);

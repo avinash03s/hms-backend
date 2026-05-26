@@ -4,6 +4,7 @@ import com.hms.appointment.entity.Prescription;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
+import java.time.LocalDate;
 import java.util.List;
 import java.util.Optional;
 
@@ -17,5 +18,7 @@ public interface PrescriptionRepository extends JpaRepository<Prescription, Long
     List<Prescription> findAllByPatientId(Long patientId);
 
     List<Prescription> findAllByDoctorIdOrderByPrescriptionDateDesc(Long doctorId);
+
+    List<Prescription> findByArchivedFalseAndPrescriptionDateBefore(LocalDate date);
 
 }
