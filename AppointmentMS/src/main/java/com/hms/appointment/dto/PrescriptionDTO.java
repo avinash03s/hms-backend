@@ -25,8 +25,16 @@ public class PrescriptionDTO {
     private LocalDate prescriptionDate;
     private String prescriptionNotes;
     private List<MedicineDTO> medicines;
+    private Boolean archived;
+    private String s3Key;
 
     public Prescription toEntity() {
-        return new Prescription(id, patientId, doctorId, doctorName, new Appointment(appointmentId), prescriptionDate, prescriptionNotes);
+        return new Prescription(
+                id, patientId, doctorId, doctorName,
+                new Appointment(appointmentId),
+                prescriptionDate, prescriptionNotes,
+                archived != null ? archived : false,
+                s3Key
+        );
     }
 }

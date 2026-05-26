@@ -10,4 +10,5 @@ public interface UserService {
     UserDTO getUserById(Long id);
     void updateUser(UserDTO userDTO);
     UserDTO getUser(String email);
+    void createDoctor(UserDTO userDTO);
 }
