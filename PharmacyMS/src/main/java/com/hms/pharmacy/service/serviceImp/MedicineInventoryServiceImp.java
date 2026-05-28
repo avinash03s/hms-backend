@@ -107,11 +107,6 @@ public class MedicineInventoryServiceImp implements MedicineInventoryService {
         this.markExpired(expiredMedicines);
     }
 
-//    @Scheduled(cron = "0 30 14 * * ?") // at 14:30
-//    public void print() {
-//        System.out.println("Scheduled task running...");
-//    }
-
     // "0 30 14 * * ?"
     // seconds minutes hours dayOfMonth month dayOfWeek
 }

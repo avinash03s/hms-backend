@@ -7,6 +7,9 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import java.time.LocalDate;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.stream.Collectors;
 
 @Data
 @NoArgsConstructor
@@ -32,12 +35,25 @@ public class Prescription {
     @Column(name = "s3_key")
     private String s3Key;
 
+    @OneToMany(mappedBy = "prescription", fetch = FetchType.EAGER)
+    private List<Medicine> medicines = new ArrayList<>();
+
+
     public Prescription(Long id) {
         this.id=id;
     }
 
     public PrescriptionDTO toDTO() {
-        return new PrescriptionDTO(id, patientId, doctorId,doctorName,
-                appointment.getId(), prescriptionDate, prescriptionNotes, null,archived,s3Key);
+        return new PrescriptionDTO(
+                id, patientId, doctorId, doctorName,
+                appointment.getId(),
+                prescriptionDate,
+                prescriptionNotes,
+                medicines.stream()
+                        .map(Medicine::toDTO)
+                        .collect(Collectors.toList()),
+                archived,
+                s3Key
+        );
     }
 }

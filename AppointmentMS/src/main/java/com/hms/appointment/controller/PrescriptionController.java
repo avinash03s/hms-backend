@@ -20,7 +20,6 @@ public class PrescriptionController {
         return prescriptionService.savePrescription(request);
     }
 
-
     @GetMapping("/{id}")
     public PrescriptionDTO getById(@PathVariable Long id) {
         return prescriptionService.getPrescriptionById(id);
