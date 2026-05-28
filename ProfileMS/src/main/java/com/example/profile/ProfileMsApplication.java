@@ -1,5 +1,6 @@
 package com.example.profile;
 
+import com.example.profile.config.AwsSecretsConfig;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 
@@ -7,7 +8,9 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 public class ProfileMsApplication {
 
 	public static void main(String[] args) {
-		SpringApplication.run(ProfileMsApplication.class, args);
+		SpringApplication app = new SpringApplication(ProfileMsApplication.class);
+		app.addInitializers(new AwsSecretsConfig());
+		app.run(args);
 	}
 
 }

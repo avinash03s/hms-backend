@@ -26,9 +26,6 @@ public class AppointmentServiceImp implements AppointmentService {
 
     private final AppointmentRepository appointmentRepository;
 
-
-    private final ApiService apiService;
-
     private final ProfileClients profileClients;
 
     @Override

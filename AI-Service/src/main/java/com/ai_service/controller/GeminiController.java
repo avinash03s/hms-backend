@@ -15,6 +15,12 @@ public class GeminiController {
 
     private final GeminiService geminiService;
 
+//    @PostMapping("/ask")
+//    public ResponseEntity<String> askGemini(@RequestBody AIRequest request){
+//        String response = geminiService.askGemini(request.getQuestion());
+//        return ResponseEntity.ok(response);
+//    }
+
     @PostMapping("/ask")
     public ResponseEntity<String> askGemini(@RequestBody AIRequest request){
         String response = geminiService.askGemini(request.getQuestion());

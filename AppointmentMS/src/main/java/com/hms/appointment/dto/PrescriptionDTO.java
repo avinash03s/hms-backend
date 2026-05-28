@@ -10,6 +10,7 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import java.time.LocalDate;
+import java.util.ArrayList;
 import java.util.List;
 
 @Data
@@ -34,7 +35,7 @@ public class PrescriptionDTO {
                 new Appointment(appointmentId),
                 prescriptionDate, prescriptionNotes,
                 archived != null ? archived : false,
-                s3Key
+                s3Key,new ArrayList<>()
         );
     }
 }
