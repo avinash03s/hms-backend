@@ -12,7 +12,14 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @AllArgsConstructor
 @Entity()
-@Table(name = "user_detail")
+@Table(
+        name = "user_detail",
+        indexes = {
+                @Index(name = "idx_user_email",      columnList = "email",    unique = true),
+                @Index(name = "idx_user_role",       columnList = "role"),
+                @Index(name = "idx_user_profile_id", columnList = "profileId")
+        }
+)
 public class User {
 
     @Id
@@ -35,6 +42,6 @@ public class User {
     private ForgotPassword forgotPassword;
 
     public UserDTO toDTO() {
-        return new UserDTO(this.id, this.name, this.email, this.password, this.role, this.profileId);
+        return new UserDTO(this.id, this.name, this.email, this.password, this.role, this.profileId,null);
     }
 }

@@ -15,8 +15,7 @@ import software.amazon.awssdk.services.secretsmanager.model.GetSecretValueRespon
 
 import java.util.Map;
 
-public class AwsSecretsConfig implements
-        ApplicationContextInitializer<ConfigurableApplicationContext> {
+public class AwsSecretsConfig implements ApplicationContextInitializer<ConfigurableApplicationContext> {
 
     private static final Logger log = LoggerFactory.getLogger(AwsSecretsConfig.class);
 

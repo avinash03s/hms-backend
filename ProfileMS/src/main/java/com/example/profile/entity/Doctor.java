@@ -37,6 +37,10 @@ public class Doctor {
     private Integer totalExperience;
     private Boolean active = true;
 
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "hospital_id")
+    private Hospital hospital;
+
     public DoctorDTO toDTO() {
         return new DoctorDTO(
                 this.id,
@@ -50,7 +54,10 @@ public class Doctor {
                 this.specialization,
                 this.department,
                 this.totalExperience,
-                true
+                true,
+                this.hospital != null ? this.hospital.getId() : null,
+                this.hospital != null ? this.hospital.getName() : null,
+                this.hospital != null ? this.hospital.getCity() : null
         );
     }
     //Converts a DTO (DoctorDTO) into a Database Entity (Doctor)

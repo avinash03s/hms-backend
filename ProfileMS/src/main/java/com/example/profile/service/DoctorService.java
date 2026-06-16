@@ -22,4 +22,8 @@ public interface DoctorService {
     void deleteDoctorById(Long doctorId);
 
     List<DoctorDropDown> getDoctorById(List<Long> ids);
+
+    List<DoctorDTO> getDoctorsByHospital(Long hospitalId);
+
+    List<DoctorDTO> getDoctorsByCity(String city);
 }
