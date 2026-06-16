@@ -23,4 +23,8 @@ public interface DoctorRepository extends JpaRepository<Doctor, Long> {
     List<DoctorDropDown> findAllDoctorDropdownsByIds(List<Long> ids);
 
     List<Doctor> findByActiveTrue();
+
+    List<Doctor> findByHospital_IdAndActiveTrue(Long hospitalId);
+
+    List<Doctor> findByHospital_CityAndActiveTrue(String city);
 }

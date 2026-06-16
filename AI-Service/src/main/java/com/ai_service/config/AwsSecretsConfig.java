@@ -14,8 +14,7 @@ import software.amazon.awssdk.services.secretsmanager.model.GetSecretValueRespon
 
 import java.util.Map;
 
-public class AwsSecretsConfig implements
-        ApplicationContextInitializer<ConfigurableApplicationContext> {
+public class AwsSecretsConfig implements ApplicationContextInitializer<ConfigurableApplicationContext> {
 
     private final ObjectMapper objectMapper = new ObjectMapper();
     private static final Logger log = LoggerFactory.getLogger(AwsSecretsConfig.class);
@@ -37,9 +36,7 @@ public class AwsSecretsConfig implements
         }
     }
 
-    private void loadSecret(SecretsManagerClient client,
-                            String secretName,
-                            ConfigurableApplicationContext context) {
+    private void loadSecret(SecretsManagerClient client, String secretName, ConfigurableApplicationContext context) {
         try {
             GetSecretValueRequest request = GetSecretValueRequest.builder()
                     .secretId(secretName)
@@ -47,13 +44,11 @@ public class AwsSecretsConfig implements
 
             GetSecretValueResponse response = client.getSecretValue(request);
 
-            Map<String, Object> secrets = objectMapper.readValue(
-                    response.secretString(),
-                    new TypeReference<Map<String, Object>>() {}
+            Map<String, Object> secrets = objectMapper.readValue(response.secretString(), new TypeReference<>() {
+                    }
             );
 
-            context.getEnvironment().getPropertySources().addFirst(
-                    new MapPropertySource(secretName, secrets)
+            context.getEnvironment().getPropertySources().addFirst(new MapPropertySource(secretName, secrets)
             );
 
         } catch (Exception e) {

@@ -2,15 +2,25 @@ package com.hms.appointment.controller;
 
 import com.hms.appointment.dto.AppointmentDTO;
 import com.hms.appointment.dto.AppointmentDetailsDTO;
+import com.hms.appointment.entity.DoctorSchedule;
+import com.hms.appointment.exception.HMSException;
+import com.hms.appointment.repository.AppointmentRepository;
+import com.hms.appointment.repository.DoctorScheduleRepository;
 import com.hms.appointment.service.AppointmentService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
+import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.time.LocalTime;
+import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 
 @RestController
 @RequestMapping("/appointment")
@@ -19,6 +29,9 @@ import java.util.List;
 public class AppointmentController {
 
     private final AppointmentService appointmentService;
+
+    private final DoctorScheduleRepository doctorScheduleRepository;
+    private final AppointmentRepository appointmentRepository;
 
     @PostMapping("/schedule")
     public ResponseEntity<Long> scheduleAppointment(@RequestBody AppointmentDTO dto) {
@@ -60,5 +73,19 @@ public class AppointmentController {
     @GetMapping("/all/details")
     public ResponseEntity<List<AppointmentDTO>> getAllAppointmentDetails() {
         return new ResponseEntity<>(appointmentService.getAllAppointmentDetails(), HttpStatus.OK);
+    }
+
+    @GetMapping("/slots/available")
+    public ResponseEntity<List<String>> getAvailableSlots(@RequestParam Long doctorId,
+                                                          @RequestParam @DateTimeFormat(iso = DateTimeFormat.ISO.DATE)
+                                                          LocalDate date) {
+        return ResponseEntity.ok(appointmentService.getAvailableSlots(doctorId, date));
+    }
+
+    @GetMapping("/slots/all")
+    public ResponseEntity<Map<String, Object>> getAllSlots(@RequestParam Long doctorId,
+                                                           @RequestParam @DateTimeFormat(iso = DateTimeFormat.ISO.DATE)
+                                                           LocalDate date) {
+        return ResponseEntity.ok(appointmentService.getAllSlots(doctorId, date));
     }
 }

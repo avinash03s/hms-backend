@@ -3,7 +3,9 @@ package com.hms.appointment.service;
 import com.hms.appointment.dto.AppointmentDTO;
 import com.hms.appointment.dto.AppointmentDetailsDTO;
 
+import java.time.LocalDate;
 import java.util.List;
+import java.util.Map;
 
 public interface AppointmentService {
     Long scheduleAppointment(AppointmentDTO appointmentDTO);
@@ -25,4 +27,8 @@ public interface AppointmentService {
     List<AppointmentDTO> getAllAppointments();
 
     List<AppointmentDTO> getAllAppointmentDetails();
+
+    List<String> getAvailableSlots(Long doctorId, LocalDate date);
+
+    Map<String, Object> getAllSlots(Long doctorId, LocalDate date);
 }

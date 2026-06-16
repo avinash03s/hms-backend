@@ -30,6 +30,8 @@ public class UserDTO {
     private Roles role;
     private Long profileId;
 
+    private Long hospitalId;
+
 
     public User toEntity() {
         return new User(this.id, this.name, this.email, this.password, this.role, this.profileId, null);

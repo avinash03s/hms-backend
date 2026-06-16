@@ -21,4 +21,7 @@ public class DoctorDTO {
     private String specialization;
     private String department;
     private Integer totalExperience;
+    private Long hospitalId;
+    private String hospitalName;
+    private String city;
 }

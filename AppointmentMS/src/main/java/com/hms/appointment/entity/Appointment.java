@@ -2,10 +2,7 @@ package com.hms.appointment.entity;
 
 import com.hms.appointment.constant.Status;
 import com.hms.appointment.dto.AppointmentDTO;
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
+import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -16,6 +13,10 @@ import java.time.LocalDateTime;
 @NoArgsConstructor
 @AllArgsConstructor
 @Entity
+//@Table(uniqueConstraints = {@UniqueConstraint(name = "uk_doctor_slot",
+//        columnNames = {"doctor_id", "appointment_time"})
+//    }
+//)
 public class Appointment {
 
     @Id
@@ -36,3 +37,9 @@ public class Appointment {
     }
 
 }
+
+//CONSTRAINT - to prevent Race condition (DB Side)
+
+//ALTER TABLE appointment
+//ADD CONSTRAINT uk_doctor_slot
+//UNIQUE (doctor_id, appointment_time);

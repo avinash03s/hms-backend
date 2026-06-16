@@ -4,6 +4,7 @@ import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.io.Decoders;
 import io.jsonwebtoken.security.Keys;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.cloud.gateway.filter.GatewayFilter;
 import org.springframework.cloud.gateway.filter.factory.AbstractGatewayFilterFactory;
 import org.springframework.http.HttpHeaders;
@@ -12,16 +13,19 @@ import org.springframework.stereotype.Component;
 import org.springframework.web.server.ServerWebExchange;
 
 import javax.crypto.SecretKey;
-import java.nio.charset.StandardCharsets;
+import io.jsonwebtoken.io.Decoders;
 
 @Component
 public class TokenFilter extends AbstractGatewayFilterFactory<TokenFilter.Config> {
 
-    private static final String SECRET = "def86d1e228fc761722d1e41e2b4760a2a5e839ec142897aa8d" +
-            "7cf73b30d3d4481e7443c1fefa9ef58630c3922779b32af47a6401a18a38918982bf040f9d236";
+
+    @Value("${jwt.secret}")
+    private String SECRET;
 
     //SecretKey type + created once + explicit UTF-8
-    private final SecretKey key = Keys.hmacShaKeyFor(SECRET.getBytes(StandardCharsets.UTF_8));
+//    private final SecretKey key = Keys.hmacShaKeyFor(SECRET.getBytes(StandardCharsets.UTF_8));
+
+    private final SecretKey key = Keys.hmacShaKeyFor(Decoders.BASE64.decode(SECRET));
 
     public TokenFilter() {
         super(Config.class);
@@ -62,7 +66,10 @@ public class TokenFilter extends AbstractGatewayFilterFactory<TokenFilter.Config
                 //Forward user info to downstream services
                 String username = claims.getSubject();
                 ServerWebExchange mutatedExchange = exchange.mutate()
-                        .request(r -> r.header("X-User", username))
+                        .request(r -> r
+                                .header("X-User", username)
+                                .header(HttpHeaders.AUTHORIZATION, authHeader)
+                        )
                         .build();
 
                 return chain.filter(mutatedExchange);
@@ -77,87 +84,3 @@ public class TokenFilter extends AbstractGatewayFilterFactory<TokenFilter.Config
     public static class Config {
     }
 }
-
-//package com.hms.gateway.filter;
-//
-//import io.jsonwebtoken.Claims;
-//import io.jsonwebtoken.Jwts;
-//import io.jsonwebtoken.io.Decoders;
-//import io.jsonwebtoken.security.Keys;
-//import org.springframework.cloud.gateway.filter.GatewayFilter;
-//import org.springframework.cloud.gateway.filter.factory.AbstractGatewayFilterFactory;
-//import org.springframework.http.HttpHeaders;
-//import org.springframework.http.HttpStatus;
-//import org.springframework.stereotype.Component;
-//import org.springframework.web.server.ServerWebExchange;
-//
-//import javax.crypto.SecretKey;
-//
-//@Component
-//public class TokenFilter extends AbstractGatewayFilterFactory<TokenFilter.Config> {
-//
-//    private static final String SECRET = "def86d1e228fc761722d1e41e2b4760a2a5e839ec142897aa8d" +
-//            "7cf73b30d3d4481e7443c1fefa9ef58630c3922779b32af47a6401a18a38918982bf040f9d236";
-//
-//    // ✅ BASE64 decode — User Service jaisa same method
-//    private final SecretKey key = Keys.hmacShaKeyFor(Decoders.BASE64.decode(SECRET));
-//
-//    public TokenFilter() {
-//        super(Config.class);
-//    }
-//
-//    @Override
-//    public GatewayFilter apply(Config config) {
-//        return (exchange, chain) -> {
-//
-//            if (exchange.getRequest().getMethod().name().equals("OPTIONS")) {
-//                return chain.filter(exchange);
-//            }
-//
-//            String path = exchange.getRequest().getURI().getPath();
-//            System.out.println("PATH = " + path);
-//
-//            if (path.contains("/user/login") || path.contains("/user/register")) {
-//                return chain.filter(exchange);
-//            }
-//
-//            String authHeader = exchange.getRequest().getHeaders()
-//                    .getFirst(HttpHeaders.AUTHORIZATION);
-//
-//            if (authHeader == null || !authHeader.startsWith("Bearer ")) {
-//                exchange.getResponse().setStatusCode(HttpStatus.UNAUTHORIZED);
-//                return exchange.getResponse().setComplete();
-//            }
-//
-//            String token = authHeader.substring(7);
-//
-//            try {
-//                Claims claims = Jwts.parser()
-//                        .verifyWith(key)
-//                        .build()
-//                        .parseSignedClaims(token)
-//                        .getPayload();
-//
-//                String username = claims.getSubject();
-//
-//                // ✅ Authorization header bhi forward karo downstream ko
-//                ServerWebExchange mutatedExchange = exchange.mutate()
-//                        .request(r -> r
-//                                .header("X-User", username)
-//                                .header(HttpHeaders.AUTHORIZATION, authHeader) // ✅ ADD
-//                        )
-//                        .build();
-//
-//                return chain.filter(mutatedExchange);
-//
-//            } catch (Exception e) {
-//                System.out.println("TOKEN FILTER ERROR = " + e.getMessage());
-//                exchange.getResponse().setStatusCode(HttpStatus.UNAUTHORIZED);
-//                return exchange.getResponse().setComplete();
-//            }
-//        };
-//    }
-//
-//    public static class Config {
-//    }
-//}

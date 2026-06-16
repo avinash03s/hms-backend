@@ -61,4 +61,14 @@ public class DoctorController {
     public ResponseEntity<List<DoctorDropDown>> getDoctorsById(@RequestParam List<Long> ids) {
         return new ResponseEntity<>(doctorService.getDoctorById(ids), HttpStatus.OK);
     }
+
+    @GetMapping("/by-hospital/{hospitalId}")
+    public ResponseEntity<List<DoctorDTO>> getDoctorsByHospital(@PathVariable Long hospitalId) {
+        return new ResponseEntity<>(doctorService.getDoctorsByHospital(hospitalId), HttpStatus.OK);
+    }
+
+    @GetMapping("/by-city/{city}")
+    public ResponseEntity<List<DoctorDTO>> getDoctorsByCity(@PathVariable String city) {
+        return new ResponseEntity<>(doctorService.getDoctorsByCity(city), HttpStatus.OK);
+    }
 }
