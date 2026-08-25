@@ -1,10 +1,15 @@
 package com.hms.appointment.controller;
 
 import com.hms.appointment.dto.AppointmentRecordDTO;
+import com.hms.appointment.dto.PrescriptionDTO;
 import com.hms.appointment.dto.RecordDetailsDTO;
 import com.hms.appointment.service.AppointmentRecordService;
+import com.hms.appointment.service.PrescriptionPdfService;
+import com.hms.appointment.service.PrescriptionService;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
@@ -19,6 +24,8 @@ import java.util.List;
 public class AppointmentRecordController {
 
     private final AppointmentRecordService appointmentRecordService;
+    private final PrescriptionService prescriptionService;
+    private final PrescriptionPdfService prescriptionPdfService;
 
     @PostMapping("/create")
     public ResponseEntity<Long> createAppointmentRecord(@RequestBody AppointmentRecordDTO request) {
@@ -55,5 +62,18 @@ public class AppointmentRecordController {
     @GetMapping("/getRecordsByPatientId/{patientId}")
     public ResponseEntity<List<RecordDetailsDTO>> getRecordsByPatientId(@PathVariable Long patientId) {
         return new ResponseEntity<>(appointmentRecordService.getAppointmentRecordByPatientId(patientId), HttpStatus.OK);
+    }
+
+    @GetMapping("/prescription/{prescriptionId}/pdf")
+    public ResponseEntity<byte[]> generatePrescriptionPdf(@PathVariable Long prescriptionId) {
+        PrescriptionDTO prescription = prescriptionService.getPrescriptionById(prescriptionId);
+
+        // Generate real PDF
+        byte[] pdf = prescriptionPdfService.generatePrescriptionPdf(prescription);
+
+        return ResponseEntity.ok().header(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename=prescription-" + prescriptionId + ".pdf")
+                .contentType(MediaType.APPLICATION_PDF)
+                .contentLength(pdf.length)
+                .body(pdf);
     }
 }

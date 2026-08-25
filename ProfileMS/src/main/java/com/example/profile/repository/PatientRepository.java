@@ -15,4 +15,6 @@ public interface PatientRepository extends JpaRepository<Patient, Long> {
     Optional<Patient> findByAadharId(String aadharId);
 
     List<Patient> findByActiveTrue();
+
+    Optional<Patient> findByUserId(Long userId);
 }

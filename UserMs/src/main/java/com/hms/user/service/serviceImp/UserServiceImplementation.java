@@ -20,7 +20,7 @@ import java.util.Optional;
 @Service("userService")
 @Transactional
 @RequiredArgsConstructor
-public class UserServiceImplementation implements UserService {
+public class  UserServiceImplementation implements UserService {
 
     private static final Logger log = LoggerFactory.getLogger(UserServiceImplementation.class);
 
@@ -56,6 +56,7 @@ public class UserServiceImplementation implements UserService {
 //    }
 
     /// role based
+
     @Override
     public void registerUser(UserDTO userDTO) {
         Optional<User> byEmail = repository.findByEmail(userDTO.getEmail());
@@ -64,9 +65,17 @@ public class UserServiceImplementation implements UserService {
         }
         userDTO.setRole(Roles.PATIENT);
         userDTO.setPassword(passwordEncoder.encode(userDTO.getPassword()));
+
+        // First save user to generate ID
+        User savedUser = repository.save(userDTO.toEntity());
+        userDTO.setId(savedUser.getId());
+
+        // Now call ProfileMS with correct userId
         Long profileId = profileClients.addPatient(userDTO);
-        userDTO.setProfileId(profileId);
-        repository.save(userDTO.toEntity());
+
+        // Update profileId back on user
+        savedUser.setProfileId(profileId);
+        repository.save(savedUser);
     }
 
     @Override
