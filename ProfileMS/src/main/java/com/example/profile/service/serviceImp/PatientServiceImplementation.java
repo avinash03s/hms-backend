@@ -48,6 +48,7 @@ public class PatientServiceImplementation implements PatientService {
                 .stream()
                 .map(p -> new PatientDTO(
                         p.getId(),
+                        p.getUserId(),
                         p.getName(),
                         p.getEmail(),
                         p.getDob(),
@@ -68,5 +69,14 @@ public class PatientServiceImplementation implements PatientService {
                 .orElseThrow(() -> new HMSException("PATIENT_NOT_FOUND"));
         patient.setActive(false);
         patientRepository.save(patient);
+    }
+
+    @Override
+    public Long getPatientIdByUserId(Long userId) {
+
+        Patient patient = patientRepository.findByUserId(userId)
+                .orElseThrow(() -> new RuntimeException("Patient not found"));
+
+        return patient.getId();
     }
 }

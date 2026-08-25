@@ -48,4 +48,11 @@ public class PatientController {
         patientService.deletePatientById(patientId);
         return new ResponseEntity<>("Patient Delete Successfully", HttpStatus.OK);
     }
+
+    @GetMapping("/patient-id/{userId}")
+    public ResponseEntity<Long> getPatientIdByUserId(@PathVariable Long userId) {
+
+        return ResponseEntity.ok(patientService.getPatientIdByUserId(userId));
+
+    }
 }

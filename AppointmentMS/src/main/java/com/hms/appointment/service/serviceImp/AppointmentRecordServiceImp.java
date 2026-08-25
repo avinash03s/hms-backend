@@ -1,5 +1,6 @@
 package com.hms.appointment.service.serviceImp;
 
+import com.hms.appointment.clients.AiServiceClient;
 import com.hms.appointment.clients.ProfileClients;
 import com.hms.appointment.constant.Status;
 import com.hms.appointment.dto.AppointmentRecordDTO;
@@ -15,6 +16,7 @@ import com.hms.appointment.service.PrescriptionService;
 import com.hms.appointment.service.S3ArchiveService;
 import com.hms.appointment.utility.StringListConverter;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -24,9 +26,12 @@ import java.util.Map;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
+
+
 @Service
 @RequiredArgsConstructor
 @Transactional
+@Slf4j
 public class AppointmentRecordServiceImp implements AppointmentRecordService {
 
     private final AppointmentRecordRepository appointmentRecordRepository;
@@ -38,6 +43,8 @@ public class AppointmentRecordServiceImp implements AppointmentRecordService {
     private final AppointmentRepository appointmentRepository;
 
     private final S3ArchiveService s3ArchiveService;
+
+    private final AiServiceClient aiServiceClient;
 
     ///  Create new appointment record
     @Override
@@ -57,8 +64,14 @@ public class AppointmentRecordServiceImp implements AppointmentRecordService {
             request.getPrescription().setPatientId(request.getPatientId());
             /// Save prescription
             prescriptionService.savePrescription(request.getPrescription());
-        }
 
+            /// trigger RAG. Never breaks the main save flow.
+            try {
+                aiServiceClient.reindexPrescriptions(request.getPatientId());
+            } catch (Exception e) {
+                log.warn("RAG failed for patientId={}: {}", request.getPatientId(), e.getMessage());
+            }
+        }
         // UPDATE APPOINTMENT STATUS
         Appointment appointment = appointmentRepository
                 .findById(request.getAppointmentId())

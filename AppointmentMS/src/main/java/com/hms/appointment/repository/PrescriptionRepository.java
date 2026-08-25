@@ -21,4 +21,6 @@ public interface PrescriptionRepository extends JpaRepository<Prescription, Long
 
     List<Prescription> findByArchivedFalseAndPrescriptionDateBefore(LocalDate date);
 
+    List<Prescription> findByPatientId(Long patientId);
+
 }

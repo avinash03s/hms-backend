@@ -19,6 +19,8 @@ public class Patient {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
+    private Long userId;
+
     private String name;
 
     @Column(unique = true)
@@ -37,7 +39,7 @@ public class Patient {
     private Boolean active = true;
 
     public PatientDTO toDTO(){
-        return new PatientDTO(this.id, this.name, this.email,this.dob,this.profilePictureId
+        return new PatientDTO(this.id,this.userId, this.name, this.email,this.dob,this.profilePictureId
                 ,this.phoneNo,this.address,this.aadharId,this.bloodGroup,this.allergies,this.chronicDisease,true);
     }
 }

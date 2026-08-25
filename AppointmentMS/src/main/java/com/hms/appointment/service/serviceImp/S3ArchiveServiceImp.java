@@ -1,10 +1,11 @@
-package com.hms.appointment.service;
+package com.hms.appointment.service.serviceImp;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.hms.appointment.dto.PrescriptionDTO;
 import com.hms.appointment.entity.AppointmentRecord;
 import com.hms.appointment.entity.Prescription;
 import com.hms.appointment.exception.HMSException;
+import com.hms.appointment.service.S3ArchiveService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;

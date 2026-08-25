@@ -26,6 +26,7 @@ public class AwsSecretsConfig implements ApplicationContextInitializer<Configura
                     .region(Region.AP_SOUTH_1)
                     .build();
 
+            loadSecret(client, "/myapp/common/db-credentials", context);
             loadSecret(client, "/myapp/ai-service/gemini-key", context);
 
             client.close();
