@@ -56,7 +56,12 @@ public class GeminiConfig {
         return GoogleAiGeminiChatModel.builder()
                 .apiKey(apiKey)
                 .modelName("gemini-3.6-flash")
+                .sendThinking(true)
+                .returnThinking(true)
                 .build();
+        /*
+          thought_signature fix - Enabled thinking support in the LangChain4j Gemini configuration
+          so that the required thought signatures are preserved across tool-call interactions.*/
     }
 
     /**

@@ -6,7 +6,7 @@ import com.ai_service.client.ProfileClient;
 import com.ai_service.dto.BookAppointmentRequest;
 import com.ai_service.util.DateTimeFormater;
 import dev.langchain4j.agent.tool.Tool;
-import dev.langchain4j.agent.tool.P; //Gemini parameter mapping
+import dev.langchain4j.agent.tool.P;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
 
@@ -32,6 +32,8 @@ import java.time.LocalDate;
  * - The tool retrieves the logged-in user's ID from UserContext,
  * calls the required microservices, and returns the result to the AI.
  * - The AI then uses this data to generate a natural language response.
+ *
+ * @P - LLM understands what each argument represents during function calling
  */
 
 @Component

@@ -24,16 +24,6 @@ import dev.langchain4j.service.spring.AiService;
 public interface PatientAssistant {
 
 
-    /**
-     * Example:
-     * User: "Show my appointments"
-     * AI checks available tools → calls AppointmentTool → returns response.
-     * <p>
-     * userId unique identifier used for maintaining user-specific memory
-     * message user's question or request
-     * AI-generated response
-     */
-
     @SystemMessage("""
             You are Pulse AI Developed by Avinash Surwase.
             

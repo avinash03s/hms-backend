@@ -1,0 +1,39 @@
+
+
+                 RETRIEVAL PIPELINE
+                       │
+                       ▼
+                 User Question
+                       │
+                       ▼
+              UserContext → userId
+                       │
+                       ▼
+            ProfileClient → patientId
+                       │
+                       ▼
+              Embedding Model
+                       │
+                       ▼
+            Query Embedding (384)
+                       │
+                       ▼
+                   Qdrant
+                       │
+              ┌────────┴────────┐
+              │                 │
+       patientId filter    similarity score
+              │                 │
+              └────────┬────────┘
+                       ▼
+                 Top 5 results
+                 score >= 0.3
+                       │
+                       ▼
+                Content objects
+                       │
+                       ▼
+                  Gemini / LLM
+                       │
+                       ▼
+                 Final Answer
