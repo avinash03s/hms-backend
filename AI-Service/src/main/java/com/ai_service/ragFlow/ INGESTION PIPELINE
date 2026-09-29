@@ -1,0 +1,28 @@
+
+
+                INGESTION PIPELINE
+                       │
+                       ▼
+        AppointmentMS → Get prescriptions
+                       │
+                       ▼
+              PrescriptionDTO
+                       │
+                       ▼
+       PrescriptionTextFormatter
+                       │
+                       ▼
+                TextSegment
+           + patientId metadata
+           + prescriptionId
+           + source
+                       │
+                       ▼
+              Embedding Model
+                       │
+                       ▼
+             384-dimensional vector
+                       │
+                       ▼
+                 Qdrant
+              Vector Database
