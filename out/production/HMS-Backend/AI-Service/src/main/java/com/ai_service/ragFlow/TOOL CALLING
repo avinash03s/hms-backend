@@ -1,0 +1,39 @@
+
+
+             TOOL CALLING PIPELINE
+                    │
+                    ▼
+              User Question
+                    │
+                    ▼
+              Gemini / LLM
+                    │
+          ┌─────────┴─────────┐
+          │                   │
+   Normal question       Tool required?
+          │                   │
+          │                   ▼
+          │            AppointmentTool
+          │                   │
+          │                   ▼
+          │           AppointmentClient
+          │                   │
+          │                   ▼
+          │           AppointmentMS
+          │                   │
+          │                   ▼
+          │          Appointment Data
+          │                   │
+          └─────────┬─────────┘
+                    ▼
+              Gemini / LLM
+                    │
+                    ▼
+              Final Answer
+
+
+What medicines were prescribed to me in my latest prescription?
+
+Show me my appointments ?
+
+Tell me about my latest prescription and also tell me my latest appointment?

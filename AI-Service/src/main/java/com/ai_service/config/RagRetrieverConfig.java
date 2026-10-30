@@ -14,6 +14,7 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.context.annotation.Lazy;
 
 import java.util.List;
 import java.util.stream.Collectors;
@@ -28,6 +29,13 @@ public class RagRetrieverConfig {
     private final EmbeddingModel embeddingModel;
     private final EmbeddingStore<TextSegment> embeddingStore;
     private final ProfileClient profileClient;
+
+/*    public RagRetrieverConfig(@Lazy EmbeddingModel embeddingModel, EmbeddingStore<TextSegment> embeddingStore,
+            ProfileClient profileClient) {
+        this.embeddingModel = embeddingModel;
+        this.embeddingStore = embeddingStore;
+        this.profileClient = profileClient;
+    }*/
 
     /// Retrieves Contents from an underlying data source using a given Query.
     @Bean

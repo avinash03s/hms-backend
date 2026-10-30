@@ -3,6 +3,9 @@ package com.ai_service.controller;
 import com.ai_service.agent.PatientAssistant;
 import com.ai_service.agent.UserContext;
 import com.ai_service.dto.AgentRequest;
+import dev.langchain4j.exception.InternalServerException;
+import dev.langchain4j.exception.InvalidRequestException;
+import dev.langchain4j.store.memory.chat.ChatMemoryStore;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -32,6 +35,8 @@ import java.util.Map;
 public class PatientAIController {
 
     private final PatientAssistant patientAssistant;
+    private final ChatMemoryStore chatMemoryStore;
+
 
     /**
      * Processes a patient's chat request and returns an AI-generated response.
@@ -46,8 +51,20 @@ public class PatientAIController {
             // AI tools can access it using UserContext.getUserId().
 
             UserContext.setUserId(Long.parseLong(userId));
-            String response = patientAssistant.chat(userId, request.getQuestion());
+            String response;
+
+            try {
+                response = patientAssistant.chat(userId, request.getQuestion());
+
+            } catch (InvalidRequestException e) {
+                chatMemoryStore.deleteMessages(userId);
+                response = patientAssistant.chat(userId, request.getQuestion());
+            }
+
             return new ResponseEntity<>(response, HttpStatus.OK);
+
+        } catch (InternalServerException e) {
+            return new ResponseEntity<>("The AI is busy right now. Please try again in a moment.", HttpStatus.SERVICE_UNAVAILABLE);
         } finally {
 
             // Always clear the ThreadLocal after the request finishes

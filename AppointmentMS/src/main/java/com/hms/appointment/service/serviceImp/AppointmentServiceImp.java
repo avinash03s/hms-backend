@@ -42,10 +42,14 @@ public class AppointmentServiceImp implements AppointmentService {
 
     @Override
     public Long scheduleAppointment(AppointmentDTO appointmentDTO) {
+
+        /// fetch doctor information for Profile Service (Doctor)
         Boolean doctorExists = profileClients.doctorExists(appointmentDTO.getDoctorId());
         if (doctorExists == null || !doctorExists) {
             throw new HMSException("DOCTOR_NOT_FOUND");
         }
+
+        /// fetch patient (user) information for Profile Service (Patient)
         Boolean patientExists = profileClients.patientExists(appointmentDTO.getPatientId());
         if (patientExists == null || !patientExists) {
             throw new HMSException("PATIENT_NOT_FOUND");
@@ -54,31 +58,32 @@ public class AppointmentServiceImp implements AppointmentService {
         LocalDateTime appointmentTime = appointmentDTO.getAppointmentTime();
         Long doctorId = appointmentDTO.getDoctorId();
 
-        //check already doctor appointment book or not
+        ///check already doctor appointment book or not
         DayOfWeek day = appointmentTime.getDayOfWeek();
         DoctorSchedule schedule = doctorScheduleRepository
                 .findByDoctorIdAndDayOfWeek(doctorId, day)
                 .orElseThrow(() -> new HMSException("DOCTOR_SCHEDULE_NOT_FOUND"));
 
-        //check doctor available or not on that day
+        ///check doctor available or not on that day
         if (!schedule.isAvailable()) {
             throw new HMSException("DOCTOR_NOT_AVAILABLE_ON_THIS_DAY");
         }
 
-        //check working hours
+        ///check working hours
         LocalTime requestedTime = appointmentTime.toLocalTime();
         if (requestedTime.isBefore(schedule.getStartTime()) ||
                 requestedTime.isAfter(schedule.getEndTime())) {
             throw new HMSException("APPOINTMENT_TIME_OUT_OF_SCHEDULE");
         }
 
-        //check same doctor same time available or not
+        ///check same doctor same time available or not
         boolean alreadyBooked = appointmentRepository
                 .existsByDoctorIdAndAppointmentTimeAndStatusNot(doctorId, appointmentTime,Status.CANCELLED);
         if (alreadyBooked) {
             throw new HMSException("SLOT_ALREADY_BOOKED");
         }
 
+        /// set status and book appointment
         appointmentDTO.setStatus(Status.SCHEDULED);
         Long appointmentId = appointmentRepository.save(appointmentDTO.toEntity()).getId();
 
@@ -86,6 +91,7 @@ public class AppointmentServiceImp implements AppointmentService {
             PatientDTO patient = profileClients.getPatientById(appointmentDTO.getPatientId());
             DoctorDTO doctor = profileClients.getDoctorById(appointmentDTO.getDoctorId());
 
+            /// send whatsApp message to user your appointment booked
             if (patient != null && patient.getPhoneNo() != null) {
                 whatsAppService.sendMessage(
                         patient.getPhoneNo(),
