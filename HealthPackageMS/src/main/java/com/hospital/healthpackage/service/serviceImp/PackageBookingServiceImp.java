@@ -30,6 +30,7 @@ public class PackageBookingServiceImp implements PackageBookingService {
     @Override
     public BookingResponse bookPackage(BookingRequest request, Long userId) {
 
+        ///fetch active packages for booking
         HealthPackage pkg = packageRepository.findById(request.getPackageId())
                 .filter(HealthPackage::getIsActive)
                 .orElseThrow(() -> new ResourceNotFoundException(

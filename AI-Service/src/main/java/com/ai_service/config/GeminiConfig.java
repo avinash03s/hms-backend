@@ -6,6 +6,8 @@ import dev.langchain4j.memory.chat.MessageWindowChatMemory;
 import dev.langchain4j.model.chat.ChatModel;
 import dev.langchain4j.model.googleai.GeminiThinkingConfig;
 import dev.langchain4j.model.googleai.GoogleAiGeminiChatModel;
+import dev.langchain4j.store.memory.chat.ChatMemoryStore;
+import dev.langchain4j.store.memory.chat.InMemoryChatMemoryStore;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -64,6 +66,11 @@ public class GeminiConfig {
           so that the required thought signatures are preserved across tool-call interactions.*/
     }
 
+    @Bean
+    public ChatMemoryStore chatMemoryStore() {
+        return new InMemoryChatMemoryStore();
+    }
+
     /**
      * Creates chat memory for each user.
      * - Allows the AI to remember previous messages in the same conversation.
@@ -71,10 +78,11 @@ public class GeminiConfig {
      * - Only the last 10 messages are stored to provide conversation context.
      */
     @Bean
-    public ChatMemoryProvider chatMemoryProvider() {
+    public ChatMemoryProvider chatMemoryProvider(ChatMemoryStore chatMemoryStore) {
         return memoryId -> MessageWindowChatMemory.builder()
                 .id(memoryId)
-                .maxMessages(10)
+                .maxMessages(40)
+                .chatMemoryStore(chatMemoryStore)
                 .build();
     }
 }

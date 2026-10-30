@@ -8,10 +8,12 @@ import dev.langchain4j.store.embedding.qdrant.QdrantEmbeddingStore;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.context.annotation.Lazy;
 
 @Configuration
 public class RagConfig {
 
+//    @Lazy
     @Bean
     public EmbeddingModel embeddingModel() {
         return new AllMiniLmL6V2EmbeddingModel();

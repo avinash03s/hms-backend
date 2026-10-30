@@ -29,6 +29,7 @@ public class PrescriptionDocumentIngestor {
 
     public void ingestForPatient(Long patientId) {
 
+        /// fetch prescription form Appointment Service
         List<PrescriptionDTO> prescriptions;
         try {
             prescriptions = appointmentClient.getPrescriptionsByPatientId(patientId);
@@ -84,6 +85,7 @@ public class PrescriptionDocumentIngestor {
                 .put("source", "database")
         );
 
+        ///  Embedding
         Response<Embedding> embeddingResponse;
 
         try {
@@ -102,6 +104,7 @@ public class PrescriptionDocumentIngestor {
             throw e;
         }
 
+        /// store embedding into vector db
         try {
             embeddingStore.add(embeddingResponse.content(), segment);
         } catch (Exception e) {
